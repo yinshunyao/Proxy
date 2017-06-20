@@ -19,5 +19,5 @@ type ProxyData struct {
 
 2、响应数据会加上地址头， 4个字节IP，2个字节端口。 参见函数 BuildRspMsg
 
-3、本代理使用大段编码
+3、本代理使用大端编码
 
