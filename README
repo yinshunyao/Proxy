@@ -1,0 +1,23 @@
+本代理实现了到其他多个对端IP地址数据发送和接收，指定复用本地相同的端口
+
+
+1、目前实现了UDP代理池，传入数据格式
+msg_type 2个字节， IP 4个字节， 端口2个字节，源端口 2个字节， 响应端口 2个字节， 发送的净荷
+参见解析函数 BytesToProxyData
+
+解析的数据结构大致如下
+//代理数据结构
+type ProxyData struct {
+	msg_type int          //消息类型 0-正常报文  1-连接释放
+	peer     *net.UDPAddr //对端地址
+	src_port int          //指定发送源端口 0-65535
+	rsp_port int          //指定响应源端口 0-65535
+	data     []byte       //净荷数据，定义为byte流
+}
+
+代理会约定所有数据包本地使用src_port发送，在rsp_port上监听对端响应
+
+2、响应数据会加上地址头， 4个字节IP，2个字节端口。 参见函数 BuildRspMsg
+
+3、本代理使用大段编码
+
